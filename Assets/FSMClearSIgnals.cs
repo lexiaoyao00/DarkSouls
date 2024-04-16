@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FSMClearSIgnals : StateMachineBehaviour
+public class FSMClearSignals : StateMachineBehaviour
 {
     public string[] clearAtEnter;
     public string[] clearAtExit;
