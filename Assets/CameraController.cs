@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public PlayerInput pi;
+    
     public float horizontalSpeed = 100.0f;
     public float verticalSpeed = 80.0f;
-    public float camerraDampValue = 0.5f;
+    public float camerraDampValue = 0.05f;
 
+    private IUserInput pi;
     private GameObject playerHandle;
     private GameObject cameraHandle;
     private float tempEulerX;
@@ -23,16 +24,22 @@ public class CameraController : MonoBehaviour
         cameraHandle = transform.parent.gameObject;
         playerHandle = cameraHandle.transform.parent.gameObject;
         tempEulerX = 20;
-        model = playerHandle.GetComponent<ActorController>().model;
+        //该脚本执行顺序在ActorController之后(Default Time以后)
+        ActorController ac = playerHandle.GetComponent<ActorController>();
+        model = ac.model;
+        pi = ac.pi;
         _camera = Camera.main.gameObject;
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
+
 
     private void FixedUpdate()
     {
         //前后移动
-        Vector3 newPos = transform.position;
-        newPos.z += verticalSpeed * pi.JForward * Time.fixedDeltaTime;
-        transform.position = newPos;
+        //Vector3 newPos = transform.localPosition;
+        //newPos.z += verticalSpeed * pi.JForward * Time.fixedDeltaTime;
+        //transform.localPosition = newPos;
 
         Vector3 tempModelEuler = model.transform.eulerAngles;
 
@@ -52,7 +59,8 @@ public class CameraController : MonoBehaviour
         _camera.transform.position = Vector3.SmoothDamp(_camera.transform.position, transform.position,
             ref cameraDampVElocity,
             camerraDampValue);
-        _camera.transform.eulerAngles = transform.eulerAngles;
+        //_camera.transform.eulerAngles = transform.eulerAngles;
+        _camera.transform.LookAt(cameraHandle.transform);
 
 
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class KeyboardInput : IUserInput
 {
     [Header("===== Key Setting  =====")]
     public string KeyUp = "w";
@@ -15,50 +15,33 @@ public class PlayerInput : MonoBehaviour
     public string KeyC;
     public string KeyD;
 
-    public string keyJUp;
-    public string keyJDown;
-    public string keyJRight;
-    public string keyJLeft;
+    public string keyJUp = "up";
+    public string keyJDown = "down";
+    public string keyJRight = "right";
+    public string keyJLeft = "left";
 
-    [Header("===== Output Signals  =====")]
-    public float Dup;
-    public float Dright;
-    public float Dmag;
-    public Vector3 Dvec;
-    public float Jup;
-    public float JRight;
-    public float JForward;
+    [Header("===== Key Setting  =====")]
+    public bool mouseEnable = false;
+    public float mouseSensitivityX = 1f;
+    public float mouseSensitivityY = 1f;
 
-    // 1.pressing signal
-    public bool run;
-    // 2.trigger once signal
-    public bool jump;
-    private bool lastJump;
-    public bool attack;
-    private bool lastAttack;
-    // 3.double trigger
-
-    [Header("===== Others  =====")]
-    public bool inputEnable;
-
-    private float targetDup;
-    private float targetDright;
-    private float velocityDup;
-    private float velocityDright;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
         //****摄像机控制****
-        Jup = (Input.GetKey(keyJUp) ? 1.0f : 0f) - (Input.GetKey(keyJDown) ? 1.0f : 0f);//类似Input.GetAxis("Mouse Y")
-        JRight = (Input.GetKey(keyJRight) ? 1.0f : 0f) - (Input.GetKey(keyJLeft) ? 1.0f : 0f);//类似Input.GetAxis("Mouse X")
-        JForward = Input.GetAxis("Mouse ScrollWheel");
+        if (mouseEnable == true)
+        {
+            Jup = Input.GetAxis("Mouse Y") * 2.5f * mouseSensitivityY;
+            JRight = Input.GetAxis("Mouse X") * 3f * mouseSensitivityX;
+            //JForward = Input.GetAxis("Mouse ScrollWheel");
+        }
+        else
+        {
+            Jup = (Input.GetKey(keyJUp) ? 1.0f : 0f) - (Input.GetKey(keyJDown) ? 1.0f : 0f);//类似Input.GetAxis("Mouse Y")
+            JRight = (Input.GetKey(keyJRight) ? 1.0f : 0f) - (Input.GetKey(keyJLeft) ? 1.0f : 0f);//类似Input.GetAxis("Mouse X")
+        }
+
 
 
         //****移动控制****
@@ -84,6 +67,7 @@ public class PlayerInput : MonoBehaviour
         Dvec = Dright2 * transform.right + Dup2 * transform.forward;
 
         run = Input.GetKey(KeyA);
+        defense = Input.GetKey(KeyD);
 
         //****跳跃控制****
         bool newJump = Input.GetKey(KeyB);
@@ -108,14 +92,5 @@ public class PlayerInput : MonoBehaviour
             attack = false;
         }
         lastAttack = newJump;
-    }
-
-    private Vector2 SquareToCircle(Vector2 input)
-    {
-        Vector2 output = Vector2.zero;
-        output.x = input.x * Mathf.Sqrt(1 - (input.y * input.y)/2.0f);
-        output.y = input.y * Mathf.Sqrt(1 - (input.x * input.x)/2.0f);
-
-        return output;
     }
 }
