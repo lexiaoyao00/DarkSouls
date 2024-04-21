@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class KeyboardInput : IUserInput
 {
+    //TODO:按钮封装长按双击等实现 参考手柄输入脚本
     [Header("===== Key Setting  =====")]
     public string KeyUp = "w";
     public string KeyDown = "s";

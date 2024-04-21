@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class ActorController : MonoBehaviour
 {
     public GameObject model;
+    public CameraController camcon;
     public IUserInput pi;
     public float walkSpeed = 2.0f;
     public float runMultipli = 2.0f;
@@ -28,6 +29,8 @@ public class ActorController : MonoBehaviour
     private Vector3 deltaPos;
 
     private bool lockPlanar = false;
+    private bool trackDirection = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -49,8 +52,25 @@ public class ActorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //地面动画播放 平滑过渡
-        anim.SetFloat("forward", pi.Dmag * Mathf.Lerp(anim.GetFloat("forward"), pi.run ? 2.0f : 1.0f, 0.5f));
+        //锁定目标
+        if(pi.lockon) { 
+            camcon.LockUnlock(); 
+        }
+
+        if (camcon.lockState == false)
+        {
+            //地面动画播放 平滑过渡
+            anim.SetFloat("forward", pi.Dmag * Mathf.Lerp(anim.GetFloat("forward"), pi.run ? 2.0f : 1.0f, 0.5f));
+            anim.SetFloat("right", 0);
+        }
+        else
+        {
+            Vector3 localDvec = transform.InverseTransformDirection(pi.Dvec);
+            anim.SetFloat("forward", localDvec.z * (pi.run ? 2.0f : 1.0f));
+            anim.SetFloat("right", localDvec.x * (pi.run ? 2.0f : 1.0f));
+        }
+
+
         //防御举盾
         anim.SetBool("defense", pi.defense);
         //翻滚动画播放
@@ -69,15 +89,36 @@ public class ActorController : MonoBehaviour
         {
             anim.SetTrigger("attack");
         }
-        //模型转向 平滑过渡
-        if (pi.Dmag > 0.1f) {
-            model.transform.forward = Vector3.Slerp(model.transform.forward, pi.Dvec, 0.3f);
-        }
-        //移速计算 空中锁死速度
-        if (!lockPlanar)
+        //模型转向 平滑过渡 锁定敌人方向也锁定
+        if(camcon.lockState == false)
         {
-            planarVec = pi.Dmag * model.transform.forward * (pi.run ? runMultipli : 1.0f);
+            if (pi.Dmag > 0.1f)
+            {
+                model.transform.forward = Vector3.Slerp(model.transform.forward, pi.Dvec, 0.3f);
+            }
+            //移速计算 空中锁死速度
+            if (lockPlanar == false)
+            {
+                planarVec = pi.Dmag * model.transform.forward * walkSpeed * (pi.run ? runMultipli : 1.0f);
+            }
         }
+        else
+        {
+            if(trackDirection == false)
+            {
+                model.transform.forward = transform.forward;
+            }
+            else
+            {
+                model.transform.forward = planarVec.normalized;
+            }
+            if (lockPlanar == false)
+            {
+                planarVec = pi.Dvec * walkSpeed * (pi.run ? runMultipli : 1.0f);
+
+            }
+        }
+     
         
         
     }
@@ -108,6 +149,7 @@ public class ActorController : MonoBehaviour
         thrustVec = new Vector3(0, jumpVelocity, 0);
         pi.inputEnable = false;
         lockPlanar = true;
+        trackDirection = true;
     }
 
     //sensor调用(OnGroundSensor)
@@ -129,6 +171,7 @@ public class ActorController : MonoBehaviour
         lockPlanar = false;
         canAttack = true;
         col.material = frictionOne;
+        trackDirection = false;
     }
 
     public void OnGroundExit()
@@ -147,6 +190,7 @@ public class ActorController : MonoBehaviour
         thrustVec = new Vector3(0, rollVelocity, 0);
         pi.inputEnable = false;
         lockPlanar = true;
+        trackDirection = true;
     }
 
     public void OnJabEnter()
