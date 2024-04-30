@@ -46,9 +46,9 @@ public class CameraController : MonoBehaviour
         if (lockTarget == null)
         {
             //«∞∫Û“∆∂Ø
-            //Vector3 newPos = transform.localPosition;
-            //newPos.z += verticalSpeed * pi.JForward * Time.fixedDeltaTime;
-            //transform.localPosition = newPos;
+            Vector3 newPos = transform.localPosition;
+            newPos.z += verticalSpeed * pi.JForward * Time.fixedDeltaTime;
+            transform.localPosition = newPos;
 
             Vector3 tempModelEuler = model.transform.eulerAngles;
 

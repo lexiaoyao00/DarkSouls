@@ -11,6 +11,10 @@ public class KeyboardInput : IUserInput
     public string KeyLeft = "a";
     public string KeyRight = "d";
 
+    public string MouseX = "Mouse X";
+    public string MouseY = "Mouse Y";
+    public string MouseScrollWheel = "Mouse ScrollWheel";
+
     public string KeyA;
     public string KeyB;
     public string KeyC;
@@ -27,15 +31,33 @@ public class KeyboardInput : IUserInput
     public float mouseSensitivityY = 1f;
 
 
+    public MyButton buttonA = new MyButton();
+    public MyButton buttonB = new MyButton();
+    public MyButton buttonC = new MyButton();
+    public MyButton buttonD = new MyButton();
+    public MyButton buttonLB = new MyButton();
+    public MyButton buttonRB = new MyButton();
+    public MyButton buttonJstick = new MyButton();
+
     // Update is called once per frame
     void Update()
     {
+
+        buttonA.Tick(Input.GetKey(KeyA));//ÅÜ²½
+        buttonB.Tick(Input.GetKey(KeyB));//Ìø
+        buttonC.Tick(Input.GetKey(KeyC));//¹¥»÷
+        buttonD.Tick(Input.GetKey(KeyD));//¸éÖÃ
+        buttonLB.Tick(Input.GetKey("mouse 1"));//ÓÒ¼ü
+        //buttonRB.Tick(Input.GetMouseButton(btnRB));
+        buttonJstick.Tick(Input.GetKey("mouse 2"));//ÖÐ¼ü
+
+
         //****ÉãÏñ»ú¿ØÖÆ****
         if (mouseEnable == true)
         {
-            Jup = Input.GetAxis("Mouse Y") * 2.5f * mouseSensitivityY;
-            JRight = Input.GetAxis("Mouse X") * 3f * mouseSensitivityX;
-            //JForward = Input.GetAxis("Mouse ScrollWheel");
+            Jup = Input.GetAxis(MouseY)  * mouseSensitivityY;
+            JRight = Input.GetAxis(MouseX)  * mouseSensitivityX;
+            JForward = Input.GetAxis(MouseScrollWheel);
         }
         else
         {
@@ -67,31 +89,41 @@ public class KeyboardInput : IUserInput
         Dmag = Mathf.Sqrt((Dup2 * Dup2) + (Dright2 * Dright2));//ÀàËÆvector3.magnitude
         Dvec = Dright2 * transform.right + Dup2 * transform.forward;
 
-        run = Input.GetKey(KeyA);
-        defense = Input.GetKey(KeyD);
+        run = (buttonA.IsPressing && !buttonA.IsDelaying) || buttonA.IsExtending;
+        jump = buttonB.OnPressed && (buttonA.IsExtending  || buttonA.IsPressing);
+        roll = buttonB.OnPressed && !jump;
 
-        //****ÌøÔ¾¿ØÖÆ****
-        bool newJump = Input.GetKey(KeyB);
-        if (newJump != lastJump && newJump == true)
-        {
-            jump = true;
-        }
-        else
-        {
-            jump = false;
-        }
-        lastJump = newJump;
 
-        //****¹¥»÷¿ØÖÆ****
-        bool newAttack = Input.GetKey(KeyC);
-        if (newAttack != lastAttack && newAttack == true)
-        {
-            attack = true;
-        }
-        else
-        {
-            attack = false;
-        }
-        lastAttack = newJump;
+        defense = buttonLB.IsPressing;
+        attack = buttonC.OnPressed;
+        lockon = buttonJstick.OnPressed;
+
+
+        //run = Input.GetKey(KeyA);
+        //defense = Input.GetKey(KeyD);
+
+        ////****ÌøÔ¾¿ØÖÆ****
+        //bool newJump = Input.GetKey(KeyB);
+        //if (newJump != lastJump && newJump == true)
+        //{
+        //    jump = true;
+        //}
+        //else
+        //{
+        //    jump = false;
+        //}
+        //lastJump = newJump;
+
+        ////****¹¥»÷¿ØÖÆ****
+        //bool newAttack = Input.GetKey(KeyC);
+        //if (newAttack != lastAttack && newAttack == true)
+        //{
+        //    attack = true;
+        //}
+        //else
+        //{
+        //    attack = false;
+        //}
+        //lastAttack = newJump;
     }
 }

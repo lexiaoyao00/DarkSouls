@@ -11,7 +11,7 @@ public abstract class IUserInput : MonoBehaviour
     public Vector3 Dvec;
     public float Jup;
     public float JRight;
-    //public float JForward;
+    public float JForward;
 
     // 1.pressing signal
     public bool run;

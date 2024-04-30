@@ -1751,7 +1751,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136608677}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b990c6a6ad4293c4eb5bc5cb8a88b700, type: 3}
   m_Name: 
@@ -1762,6 +1762,7 @@ MonoBehaviour:
   Dvec: {x: 0, y: 0, z: 0}
   Jup: 0
   JRight: 0
+  JForward: 0
   run: 0
   defense: 0
   jump: 0
@@ -1773,6 +1774,9 @@ MonoBehaviour:
   KeyDown: s
   KeyLeft: a
   KeyRight: d
+  MouseX: Mouse X
+  MouseY: Mouse Y
+  MouseScrollWheel: Mouse ScrollWheel
   KeyA: left shift
   KeyB: space
   KeyC: mouse 0
@@ -1862,7 +1866,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136608677}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 759409a33b12942438c3f2566fc2fc4e, type: 3}
   m_Name: 
@@ -1873,6 +1877,7 @@ MonoBehaviour:
   Dvec: {x: 0, y: 0, z: 0}
   Jup: 0
   JRight: 0
+  JForward: 0
   run: 0
   defense: 0
   jump: 0

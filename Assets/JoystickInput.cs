@@ -43,6 +43,7 @@ public class JoystickInput : IUserInput
         //****摄像机控制****
         Jup = Input.GetAxis(axisJup);
         JRight = Input.GetAxis(axisJRight);
+        JForward = 0f;//TODO:没想好什么键位
 
         //****移动控制****
         targetDup = Input.GetAxis(axisY);
@@ -66,9 +67,9 @@ public class JoystickInput : IUserInput
         Dmag = Mathf.Sqrt((Dup2 * Dup2) + (Dright2 * Dright2));//类似vector3.magnitude
         Dvec = Dright2 * transform.right + Dup2 * transform.forward;
 
-        run = (buttonA.IsPressing && !buttonA.IsDelaying) || buttonA.IsExtending;
-        jump = buttonA.OnPressed && buttonA.IsExtending;
-        roll = buttonA.OnReleased && buttonA.IsDelaying;
+        run = (buttonA.IsPressing && !buttonA.IsDelaying) || buttonA.IsExtending;//启动延迟与退出延迟
+        jump = buttonA.OnPressed && buttonA.IsExtending;//长按连击
+        roll = buttonA.OnReleased && buttonA.IsDelaying;//双击
 
 
         defense = buttonLB.IsPressing;
